@@ -1,16 +1,12 @@
-import { load } from 'dotenv'
-
-load()
-
-const Koa = require('koa')
+import './postgres'
+import Koa from 'koa'
+import { ErrorMiddleware } from './middlewares/error'
+import { routes, allowedMethods } from './middlewares/routes'
 
 const app = new Koa()
 
-app.use((ctx, next) => {
-    ctx.body = 'Hi'
-    return next()
-        .then(() => console.log(`${ctx.method} ${ctx.url} - ${Date.now()} ms`))
-        .catch(err => console.error('Error : ', err))
-})
+app.use(ErrorMiddleware)
+app.use(routes())
+app.use(allowedMethods())
 
-app.listen(3000)
+app.listen(3000, () => console.log('Listening'))

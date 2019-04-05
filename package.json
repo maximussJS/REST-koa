@@ -5,23 +5,31 @@
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node",
+    "test": "babel-node src/app.js && mocha test/index.js",
     "start": "babel-node src/app.js"
   },
   "keywords": [],
   "author": "Max Korsun",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.7.0"
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.4.0",
+    "pg": "^7.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.3",
+    "axios": "^0.18.0",
     "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.16.0",
+    "mocha": "^6.0.2",
     "prettier": "^1.16.4"
   }
 }
