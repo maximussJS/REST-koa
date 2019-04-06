@@ -7,46 +7,66 @@ const router = new Router()
 router.post('/registration', async ctx => {
     const { login, password, name, age } = ctx.request.body
     if (!login) {
-        ctx.body = 'Login field is required'
+        ctx.body = {
+            message: 'Login field is required',
+        }
         ctx.status = 400
     }
     if (!password) {
-        ctx.body = 'Password field is required'
+        ctx.body = {
+            message: 'Password field is required',
+        }
         ctx.status = 400
     }
     if (!name) {
-        ctx.body = 'Name field is required'
+        ctx.body = {
+            message: 'Name field is required',
+        }
         ctx.status = 400
     }
     if (!age) {
-        ctx.body = 'Age field is required'
+        ctx.body = {
+            message: 'Age field is required',
+        }
         ctx.status = 400
     }
     if (login.length < 8 || login.length > 20) {
-        ctx.body = 'Invalid login length'
+        ctx.body = {
+            message: 'Invalid login length',
+        }
         ctx.status = 400
     }
     if (password.length < 8 || password.length > 20) {
-        ctx.body = 'Invalid login length'
+        ctx.body = {
+            message: 'Invalid login length',
+        }
         ctx.status = 400
     }
     if (name.length < 2 || name.length > 25) {
-        ctx.body = 'Invalid name length'
+        ctx.body = {
+            message: 'Invalid name length',
+        }
         ctx.status = 400
     }
     if (age < 6 || age > 80) {
-        ctx.body = 'Invalid age'
+        ctx.body = {
+            message: 'Invalid age',
+        }
         ctx.status = 400
     } else {
         const {
             rows: [user],
         } = await getUserByLogin(login)
         if (user) {
-            ctx.body = `User with login ${login} already exists`
+            ctx.body = {
+                message: `User with login ${login} already exists`,
+            }
             ctx.status = 400
         } else {
             await createUser(login, encryptPassword(password), name, age)
-            ctx.body = 'Created!'
+            ctx.body = {
+                message: 'Created!',
+            }
             ctx.status = 201
         }
     }

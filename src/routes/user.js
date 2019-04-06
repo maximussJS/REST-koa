@@ -22,7 +22,10 @@ router
     })
     .get('/user', isAuthorized, async ctx => {
         ctx.status = 200
-        ctx.body = ctx.user
+        ctx.body = {
+            message: 'OK',
+            data: ctx.user,
+        }
     })
     .get('/user/:name', isAuthorized, async ctx => {
         const {
@@ -44,7 +47,9 @@ router
     .put('/user/age/:id', isAuthorized, isOwner, async ctx => {
         const { age } = ctx.request.body
         if (age < 6 || age > 80) {
-            ctx.body = 'Invalid age'
+            ctx.body = {
+                message: 'Invalid age',
+            }
             ctx.status = 400
         } else {
             await updateUserAgeById(ctx.params.id, age)
@@ -78,6 +83,9 @@ router
     })
     .delete('/user/:id', isAuthorized, isOwner, async ctx => {
         await deleteUserById(ctx.params.id)
+        ctx.body = {
+            message: 'Deleted!',
+        }
         ctx.status = 204
     })
 
