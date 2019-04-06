@@ -21,7 +21,7 @@ pool.connect()
     .then(cli => {
         console.log('Postgres connected')
         pool.query(
-            'CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY , name VARCHAR(20) NOT NULL,age INTEGER NOT NULL);'
+            'CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY ,login VARCHAR(20) NOT NULL, name VARCHAR(20) NOT NULL, password VARCHAR(250) NOT NULL, age INTEGER NOT NULL);'
         ).then(res => {
             console.log('User Table Created : ', res)
             cli.release()
@@ -37,6 +37,8 @@ export const createUser = async (name, age) => {
 }
 
 export const getAllUsers = async () => await pool.query('SELECT * FROM users;')
+
+export const getUserByLogin = async login => await pool.query(`SELECT * FROM users WHERE login='${login}';`)
 
 export const getUserByName = async name => await pool.query(`SELECT * FROM users WHERE name='${name}';`)
 
