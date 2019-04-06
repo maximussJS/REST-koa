@@ -22,7 +22,9 @@ router.post('/login', async ctx => {
         ctx.body = 'Invalid login length'
         ctx.status = 400
     } else {
-        const user = await getUserByLogin(login)
+        const {
+            rows: [user],
+        } = await getUserByLogin(login)
         if (user && user.password === encryptPassword(password)) {
             ctx.status = 200
             ctx.body = {

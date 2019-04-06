@@ -12,9 +12,9 @@
   "author": "Max Korsun",
   "license": "ISC",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "koa-jwt": "^3.5.1",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "pg": "^7.9.0"

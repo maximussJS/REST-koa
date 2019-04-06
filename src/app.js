@@ -10,7 +10,7 @@ const app = new Koa()
 app.use(logger())
 app.use(
     bodyParser({
-        onerror: (err, ctx) => ctx.throw('body parse Error : ', err),
+        onerror: (err, ctx) => ctx.throw('body parse Error : ', err, 500),
     })
 )
 app.use(ErrorMiddleware)

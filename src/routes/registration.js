@@ -38,8 +38,9 @@ router.post('/registration', async ctx => {
         ctx.body = 'Invalid age'
         ctx.status = 400
     } else {
-        const user = await getUserByLogin(login)
-        console.log(user)
+        const {
+            rows: [user],
+        } = await getUserByLogin(login)
         if (user) {
             ctx.body = `User with login ${login} already exists`
             ctx.status = 400

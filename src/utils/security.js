@@ -1,4 +1,4 @@
-import jwt from 'koa-jwt'
+import { sign } from 'jsonwebtoken'
 import crypto from 'crypto'
 
 export const encryptPassword = password => {
@@ -7,4 +7,4 @@ export const encryptPassword = password => {
     return hmac.digest('hex')
 }
 
-export const generateToken = id => jwt.sign({ id })
+export const generateToken = id => sign({ id }, process.env.JWT_SECRET)
