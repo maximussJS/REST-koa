@@ -1,16 +1,22 @@
 import { pool } from './postgres'
 import Koa from 'koa'
-import logger from 'koa-logger'
+import logger from 'koa-json-logger'
 import bodyParser from 'koa-bodyparser'
 import { routes, allowedMethods } from './routes'
 import { ErrorMiddleware } from './middlewares/error'
 
 const app = new Koa()
 
-app.use(logger())
+app.use(
+    logger({
+        name: 'REST-koa',
+        path: 'logs',
+        jsonapi: true,
+    })
+)
 app.use(
     bodyParser({
-        onerror: (err, ctx) => ctx.throw('body parse Error : ', err, 500),
+        onerror: (err, ctx) => ctx.throw('body parse Error : ', 422),
     })
 )
 app.use(ErrorMiddleware)

@@ -26,9 +26,12 @@ router.post('/login', async ctx => {
             rows: [user],
         } = await getUserByLogin(login)
         if (user && user.password === encryptPassword(password)) {
+            ctx.cookies.set('REST-koa', generateToken(user.id), {
+                httpOnly: true,
+                expiresIn: 36000 + Date.now(),
+            })
             ctx.status = 200
             ctx.body = {
-                token: generateToken(user.id),
                 message: 'Authorized',
             }
         } else {

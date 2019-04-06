@@ -38,6 +38,8 @@ export const createUser = async (login, password, name, age) => {
 
 export const getAllUsers = async () => await pool.query('SELECT * FROM users;')
 
+export const getUserById = async id => await pool.query(`SELECT * FROM users WHERE id = '${id}';`)
+
 export const getUserByLogin = async login => await pool.query(`SELECT * FROM users WHERE login='${login}';`)
 
 export const getUserByName = async name => await pool.query(`SELECT * FROM users WHERE name='${name}';`)

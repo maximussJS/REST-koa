@@ -1,35 +1,82 @@
 import Router from 'koa-router'
-import { getAllUsers, getUserByName, createUser, updateUserAgeById, updateUserNameById, deleteUserById } from '../postgres'
+import { isOwner } from '../middlewares/owner'
+import { isAuthorized } from '../middlewares/authorize'
+import { getAllUsers, getUserByName, updateUserAgeById, updateUserNameById, deleteUserById } from '../postgres'
 
 const router = new Router()
 
 router
-    .get('/user', async ctx => {
+    .get('/users', isAuthorized, async ctx => {
         const {
             rows: [users],
         } = await getAllUsers()
-        users ? (ctx.body = users) : (ctx.body = 'No users')
+        users
+            ? (ctx.body = {
+                  data: users,
+                  message: 'OK',
+              })
+            : (ctx.body = {
+                  message: 'No users',
+              })
         ctx.status = 200
     })
-    .get('/user/:name', async ctx => {
+    .get('/user', isAuthorized, async ctx => {
+        ctx.status = 200
+        ctx.body = ctx.user
+    })
+    .get('/user/:name', isAuthorized, async ctx => {
         const {
             rows: [user],
         } = await getUserByName(ctx.params.name)
-        user ? (ctx.body = user) : (ctx.status = 400)
+        if (!user) {
+            ctx.status = 400
+            ctx.body = {
+                message: `No user with name ${name}`,
+            }
+        } else {
+            ctx.body = {
+                data: user,
+                message: 'OK',
+            }
+            ctx.status = 200
+        }
     })
-    .post('/user', async ctx => {
-        ctx.body = await createUser(ctx.request.body.name, ctx.request.body.age)
-        ctx.status = 201
+    .put('/user/age/:id', isAuthorized, isOwner, async ctx => {
+        const { age } = ctx.request.body
+        if (age < 6 || age > 80) {
+            ctx.body = 'Invalid age'
+            ctx.status = 400
+        } else {
+            await updateUserAgeById(ctx.params.id, age)
+            ctx.user.age = age
+            ctx.body = {
+                message: 'Updated!',
+            }
+            ctx.status = 204
+        }
     })
-    .put('/user/age/:id', async ctx => {
-        await updateUserAgeById(ctx.params.id, ctx.request.body.age)
-        ctx.status = 204
+    .put('/user/name/:id', isAuthorized, isOwner, async ctx => {
+        const { name } = ctx.request.body
+        if (!name) {
+            ctx.body = {
+                message: 'Name field is required',
+            }
+            ctx.status = 400
+        } else if (name.length < 2 || name.length > 25) {
+            ctx.body = {
+                message: 'Invalid name length',
+            }
+            ctx.status = 400
+        } else {
+            await updateUserNameById(ctx.params.id, name)
+            ctx.user.name = name
+            ctx.body = {
+                message: 'Updated',
+            }
+            ctx.status = 204
+        }
     })
-    .put('/user/name/:id', async ctx => {
-        await updateUserNameById(ctx.params.id, ctx.request.body.name)
-        ctx.status = 204
-    })
-    .delete('/user/:id', async ctx => {
+    .delete('/user/:id', isAuthorized, isOwner, async ctx => {
         await deleteUserById(ctx.params.id)
         ctx.status = 204
     })
