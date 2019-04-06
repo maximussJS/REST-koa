@@ -32,8 +32,8 @@ pool.connect()
         process.exit(1)
     })
 
-export const createUser = async (name, age) => {
-    await pool.query(`INSERT INTO users(name, age) VALUES('${name}', '${age}') RETURNING id;`)
+export const createUser = async (login, password, name, age) => {
+    await pool.query(`INSERT INTO users(login, password, name, age) VALUES('${login}', '${password}', '${name}', '${age}');`)
 }
 
 export const getAllUsers = async () => await pool.query('SELECT * FROM users;')
@@ -47,3 +47,5 @@ export const updateUserAgeById = async (id, age) => await pool.query(`UPDATE use
 export const updateUserNameById = async (id, name) => await pool.query(`UPDATE users SET name='${name}' WHERE id='${id}';`)
 
 export const deleteUserById = async id => await pool.query(`DELETE FROM users WHERE id='${id}'`)
+
+export { pool }

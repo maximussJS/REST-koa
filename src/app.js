@@ -1,9 +1,9 @@
-import './postgres'
+import { pool } from './postgres'
 import Koa from 'koa'
 import logger from 'koa-logger'
 import bodyParser from 'koa-bodyparser'
+import { routes, allowedMethods } from './routes'
 import { ErrorMiddleware } from './middlewares/error'
-import { routes, allowedMethods } from './middlewares'
 
 const app = new Koa()
 
@@ -18,3 +18,11 @@ app.use(routes())
 app.use(allowedMethods())
 
 app.listen(3000, () => console.log('Listening'))
+
+process.on('SIGINT', async () => {
+    await pool.end()
+    process.nextTick(() => {
+        console.log('\nCtrl+C Server Stopped')
+        process.exit(0)
+    })
+})

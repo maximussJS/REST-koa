@@ -1,5 +1,5 @@
-import crypto from 'crypto'
 import jwt from 'koa-jwt'
+import crypto from 'crypto'
 
 export const encryptPassword = password => {
     const hmac = crypto.createHmac('sha512', process.env.SERVER_SALT)
